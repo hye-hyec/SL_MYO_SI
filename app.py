@@ -70,7 +70,7 @@ st.markdown(
 
     /* 관련뉴스 키워드(아코디언 제목) 강조 */
     .st-key-news_section details[data-testid="stExpander"] summary p {
-        font-size: 1.5em;
+        font-size: 1.8em;
         font-weight: 700;
     }
 
