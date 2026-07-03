@@ -51,7 +51,9 @@ st.markdown(
         font-family: "Century Gothic", "Poppins", "Futura", ui-sans-serif, sans-serif;
         letter-spacing: -0.01em;
     }
-    [data-testid="stAppViewContainer"] h1 { font-weight: 800; color: var(--ink); }
+    [data-testid="stAppViewContainer"] h1 { font-weight: 800; color: var(--ink); font-size: 1.5rem; }
+    [data-testid="stAppViewContainer"] h2 { font-size: 1.25rem; }
+    [data-testid="stAppViewContainer"] h3 { font-size: 1.05rem; }
 
     /* 키워드 칩 (버튼) */
     .st-key-kw_buttons div[data-testid="stButton"] button {
