@@ -54,16 +54,6 @@ st.markdown(
     [data-testid="stAppViewContainer"] h1 { font-weight: 800; color: var(--ink); }
 
     /* 키워드 칩 (버튼) */
-    .st-key-kw_buttons,
-    .st-key-kw_buttons > div[data-testid="stVerticalBlock"] {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .st-key-kw_buttons div[data-testid="stElementContainer"] {
-        width: auto !important;
-        flex: 0 0 auto !important;
-    }
     .st-key-kw_buttons div[data-testid="stButton"] button {
         border-radius: 999px;
         border: 1.5px solid var(--teal);
@@ -72,7 +62,6 @@ st.markdown(
         font-weight: 600;
         font-size: 0.85em;
         padding: 3px 12px;
-        width: auto;
     }
     .st-key-kw_buttons div[data-testid="stButton"] button[kind="primary"] {
         background: var(--teal);
@@ -293,7 +282,7 @@ JSON 배열만 출력: ["키워드1", "키워드2"]"""
         st.session_state.selected_kw = None
 
     st.subheader("오늘의 화제키워드")
-    with st.container(key="kw_buttons"):
+    with st.container(key="kw_buttons", horizontal=True, gap="xsmall"):
         for kw in kw_list:
             is_selected = st.session_state.selected_kw == kw
             if st.button(kw, key=f"kwbtn_{kw}", type="primary" if is_selected else "secondary"):
