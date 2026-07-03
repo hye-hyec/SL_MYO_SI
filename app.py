@@ -75,8 +75,8 @@ st.markdown(
 
     hr {
         border: none;
-        border-top: 2px solid #e8e8eb !important;
-        margin: 36px 0 !important;
+        border-top: 4px solid #e8e8eb !important;
+        margin: 28px -16px !important;
     }
     </style>
     """,
