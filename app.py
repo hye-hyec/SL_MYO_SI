@@ -14,19 +14,19 @@ st.set_page_config(page_title="SL MYO SI", layout="wide")
 def get_greeting():
     hour = datetime.now(ZoneInfo("Asia/Seoul")).hour
     if 0 <= hour < 6:
-        return "늦게까지 뭐 하고 계세요? 얼른 주무세요 😴"
+        return "늦게까지 뭐 하고 계세요?  \n얼른 주무세요 😴"
     elif 6 <= hour < 9:
-        return "굿모닝! 오늘도 좋은 하루 시작해봐요 🌅"
+        return "굿모닝!  \n오늘도 좋은 하루 시작해봐요 🌅"
     elif 9 <= hour < 12:
-        return "오전도 힘차게! 오늘 하루 잘 부탁해요 ☀️"
+        return "오전도 힘차게!  \n오늘 하루 잘 부탁해요 ☀️"
     elif 12 <= hour < 14:
-        return "점심은 드셨나요? 잘 챙겨 드세요! 🍱"
+        return "점심은 드셨나요?  \n잘 챙겨 드세요! 🍱"
     elif 14 <= hour < 18:
-        return "오후도 파이팅! 조금만 더 힘내봐요 ☕"
+        return "오후도 파이팅!  \n조금만 더 힘내봐요 ☕"
     elif 18 <= hour < 21:
-        return "오늘 하루도 수고했어요. 잠깐 쉬어가요 🌆"
+        return "오늘 하루도 수고했어요.  \n잠깐 쉬어가요 🌆"
     else:
-        return "오늘 하루 어땠나요? 내일도 잘 부탁해요 🌙"
+        return "오늘 하루 어땠나요?  \n내일도 잘 부탁해요 🌙"
 
 st.title(get_greeting())
 st.markdown(
@@ -38,10 +38,7 @@ st.markdown(
     :root {
         --ink: #1b1b1f;
         --line: #ececef;
-        --teal: #00877a; --teal-bg: #e5f7f4;
-        --violet: #7b5cff;
-        --amber: #c97400; --amber-line: #e8940c;
-        --pink: #e23d8b;
+        --chip-bg: #f2f2f3;
     }
 
     html, body, [class*="css"] {
@@ -58,15 +55,15 @@ st.markdown(
     /* 키워드 칩 (버튼) */
     .st-key-kw_buttons div[data-testid="stButton"] button {
         border-radius: 999px;
-        border: 1.5px solid var(--teal);
-        background: var(--teal-bg);
-        color: var(--teal);
+        border: 1.5px solid var(--ink);
+        background: var(--chip-bg);
+        color: var(--ink);
         font-weight: 600;
         font-size: 0.85em;
         padding: 3px 12px;
     }
     .st-key-kw_buttons div[data-testid="stButton"] button[kind="primary"] {
-        background: var(--teal);
+        background: var(--ink);
         color: #fff;
     }
 
@@ -76,23 +73,14 @@ st.markdown(
         font-weight: 700;
     }
 
-    /* 섹션 제목 컬러 */
-    .st-key-news_section h2 { color: var(--teal); }
-    .st-key-quote_section h2 { color: var(--violet); }
-    .st-key-tmi_section h2 { color: var(--amber-line); }
-    .st-key-debate_section h2 { color: var(--pink); }
-
     /* 카드형 섹션 (뉴스·글귀·TMI·논쟁) */
     .st-key-news_section, .st-key-quote_section, .st-key-tmi_section, .st-key-debate_section {
         background: #ffffff;
         border-radius: 12px;
         border: 1px solid var(--line);
+        border-top: 4px solid var(--ink);
         padding: 22px 26px 26px;
     }
-    .st-key-news_section { border-top: 4px solid var(--teal); }
-    .st-key-quote_section { border-top: 4px solid var(--violet); }
-    .st-key-tmi_section { border-top: 4px solid var(--amber-line); }
-    .st-key-debate_section { border-top: 4px solid var(--pink); }
 
     hr { border-color: var(--line) !important; }
     </style>
