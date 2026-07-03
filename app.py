@@ -245,7 +245,7 @@ def _parse_kw(text):
         return []
 
 with st.container(key="news_section"):
-    st.header("📰 뉴스")
+    st.header("📰 살포시 뉴스")
 
     # ── 오늘의 인기토픽 ───────────────────────────────
     cached_kw = load_daily("news_classified", refresh_date)
@@ -271,7 +271,7 @@ JSON 배열만 출력: ["키워드1", "키워드2"]"""
     if "selected_kw" not in st.session_state:
         st.session_state.selected_kw = None
 
-    st.subheader("오늘의 화제키워드")
+    st.subheader("화제키워드")
     with st.container(key="kw_buttons", horizontal=True, gap="xsmall"):
         for kw in kw_list:
             is_selected = st.session_state.selected_kw == kw
@@ -279,7 +279,7 @@ JSON 배열만 출력: ["키워드1", "키워드2"]"""
                 st.session_state.selected_kw = None if is_selected else kw
     st.caption(f"기준 시각: {kw_time}" if kw_time else f"기준일: {refresh_date}")
 
-    st.subheader("관련뉴스 살펴보기")
+    st.subheader("관련뉴스")
 
     for kw in kw_list:
         with st.expander(kw, expanded=(kw == st.session_state.selected_kw)):
@@ -319,7 +319,7 @@ def generate_literary(refresh_date):
     return content
 
 with st.container(key="quote_section"):
-    st.header("📖 오늘의 글귀")
+    st.header("📖 살포시 읽기")
 
     try:
         literary = generate_literary(refresh_date)
@@ -367,7 +367,7 @@ def generate_tmi(refresh_date):
     return content
 
 with st.container(key="tmi_section"):
-    st.header("💡 오늘의 TMI")
+    st.header("💡 살포시 TMI")
 
     try:
         tmi = generate_tmi(refresh_date)
@@ -417,7 +417,7 @@ B: (선택지 B)"""
     return content
 
 with st.container(key="debate_section"):
-    st.header("⚡ 오늘의 논쟁")
+    st.header("⚡ 살포시 논쟁")
 
     try:
         debate = generate_debate(refresh_date)
