@@ -55,6 +55,9 @@ st.markdown(
 
     /* 키워드 칩 */
     div[data-testid='stMarkdownContainer'] code {
+        display: inline-block;
+        white-space: nowrap;
+        margin: 4px 8px 4px 0;
         background: var(--teal-bg);
         color: var(--teal);
         border: 1.5px solid var(--teal);
