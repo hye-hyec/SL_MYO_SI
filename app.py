@@ -14,7 +14,7 @@ st.set_page_config(page_title="SL MYO SI", layout="wide")
 def get_greeting():
     hour = datetime.now(ZoneInfo("Asia/Seoul")).hour
     if 0 <= hour < 6:
-        return "늦게까지 뭐 하고 계세요? 얼른 자요! 😴"
+        return "늦게까지 뭐 하고 계세요? 얼른 주무세요 😴"
     elif 6 <= hour < 9:
         return "굿모닝! 오늘도 좋은 하루 시작해봐요 🌅"
     elif 9 <= hour < 12:
@@ -53,18 +53,36 @@ st.markdown(
     }
     [data-testid="stAppViewContainer"] h1 { font-weight: 800; color: var(--ink); }
 
-    /* 키워드 칩 */
-    div[data-testid='stMarkdownContainer'] code {
-        display: inline-block;
-        white-space: nowrap;
-        margin: 4px 8px 4px 0;
+    /* 키워드 칩 (버튼) */
+    .st-key-kw_buttons,
+    .st-key-kw_buttons > div[data-testid="stVerticalBlock"] {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .st-key-kw_buttons div[data-testid="stElementContainer"] {
+        width: auto !important;
+        flex: 0 0 auto !important;
+    }
+    .st-key-kw_buttons div[data-testid="stButton"] button {
+        border-radius: 999px;
+        border: 1.5px solid var(--teal);
         background: var(--teal-bg);
         color: var(--teal);
-        border: 1.5px solid var(--teal);
-        border-radius: 999px;
-        padding: 3px 12px;
         font-weight: 600;
         font-size: 0.85em;
+        padding: 3px 12px;
+        width: auto;
+    }
+    .st-key-kw_buttons div[data-testid="stButton"] button[kind="primary"] {
+        background: var(--teal);
+        color: #fff;
+    }
+
+    /* 관련뉴스 키워드(아코디언 제목) 강조 */
+    .st-key-news_section details[data-testid="stExpander"] summary p {
+        font-size: 1.2em;
+        font-weight: 700;
     }
 
     /* 섹션 제목 컬러 */
@@ -271,14 +289,21 @@ JSON 배열만 출력: ["키워드1", "키워드2"]"""
 
     kw_time = load_daily("news_classified_time", refresh_date) or ""
 
+    if "selected_kw" not in st.session_state:
+        st.session_state.selected_kw = None
+
     st.subheader("오늘의 화제키워드")
-    st.markdown("  ".join(f"`{kw}`" for kw in kw_list))
+    with st.container(key="kw_buttons"):
+        for kw in kw_list:
+            is_selected = st.session_state.selected_kw == kw
+            if st.button(kw, key=f"kwbtn_{kw}", type="primary" if is_selected else "secondary"):
+                st.session_state.selected_kw = None if is_selected else kw
     st.caption(f"기준 시각: {kw_time}" if kw_time else f"기준일: {refresh_date}")
 
     st.subheader("관련뉴스 살펴보기")
 
     for kw in kw_list:
-        with st.expander(kw):
+        with st.expander(kw, expanded=(kw == st.session_state.selected_kw)):
             articles = fetch_related_news(kw, refresh_date, display=5)
             for art in articles:
                 title = _clean_title(art["title"])
