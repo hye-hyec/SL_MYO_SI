@@ -11,24 +11,24 @@ from urllib.parse import urlparse
 
 st.set_page_config(page_title="SL MYO SI", layout="wide")
 
-def get_greeting():
-    hour = datetime.now(ZoneInfo("Asia/Seoul")).hour
-    if 0 <= hour < 6:
-        return "늦게까지 뭐 하고 계세요?  \n얼른 주무세요 😴"
-    elif 6 <= hour < 9:
-        return "굿모닝!  \n오늘도 좋은 하루 시작해봐요 🌅"
-    elif 9 <= hour < 12:
-        return "오전도 힘차게!  \n오늘 하루 잘 부탁해요 ☀️"
-    elif 12 <= hour < 14:
-        return "점심은 드셨나요?  \n잘 챙겨 드세요! 🍱"
-    elif 14 <= hour < 18:
-        return "오후도 파이팅!  \n조금만 더 힘내봐요 ☕"
-    elif 18 <= hour < 21:
-        return "오늘 하루도 수고했어요.  \n잠깐 쉬어가요 🌆"
-    else:
-        return "오늘 하루 어땠나요?  \n내일도 잘 부탁해요 🌙"
+# def get_greeting():
+#     hour = datetime.now(ZoneInfo("Asia/Seoul")).hour
+#     if 0 <= hour < 6:
+#         return "늦게까지 뭐 하고 계세요?  \n얼른 주무세요 😴"
+#     elif 6 <= hour < 9:
+#         return "굿모닝!  \n오늘도 좋은 하루 시작해봐요 🌅"
+#     elif 9 <= hour < 12:
+#         return "오전도 힘차게!  \n오늘 하루 잘 부탁해요 ☀️"
+#     elif 12 <= hour < 14:
+#         return "점심은 드셨나요?  \n잘 챙겨 드세요! 🍱"
+#     elif 14 <= hour < 18:
+#         return "오후도 파이팅!  \n조금만 더 힘내봐요 ☕"
+#     elif 18 <= hour < 21:
+#         return "오늘 하루도 수고했어요.  \n잠깐 쉬어가요 🌆"
+#     else:
+#         return "오늘 하루 어땠나요?  \n내일도 잘 부탁해요 🌙"
 
-st.title(get_greeting())
+# st.title(get_greeting())
 st.markdown(
     """
     <style>
