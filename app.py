@@ -54,8 +54,8 @@ st.markdown(
 
     /* 키워드 칩 (버튼) */
     .st-key-kw_buttons div[data-testid="stButton"] button {
-        border-radius: 999px;
-        border: 1.5px solid var(--ink);
+        border-radius: 8px;
+        border: none;
         background: var(--chip-bg);
         color: var(--ink);
         font-weight: 600;
