@@ -73,16 +73,11 @@ st.markdown(
         font-weight: 700;
     }
 
-    /* 카드형 섹션 (뉴스·글귀·TMI·논쟁) */
-    .st-key-news_section, .st-key-quote_section, .st-key-tmi_section, .st-key-debate_section {
-        background: #ffffff;
-        border-radius: 12px;
-        border: 1px solid var(--line);
-        border-top: 4px solid var(--ink);
-        padding: 22px 26px 26px;
+    hr {
+        border: none;
+        border-top: 6px solid #d8d8db !important;
+        margin: 28px 0 !important;
     }
-
-    hr { border-color: var(--line) !important; }
     </style>
     """,
     unsafe_allow_html=True,
