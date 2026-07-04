@@ -407,19 +407,20 @@ def generate_debate(refresh_date):
 
 [조건]
 - 양자택일 형식 (A vs B)
+- 질문은 구체적인 상황을 3문장 이상으로 묘사해서, 답변자가 그 상황에 이입해 진지하게 고민하게 만들 것 (단순 취향 질문 금지)
 - 답변에서 그 사람의 성격·기호·성향이 자연스럽게 드러나는 주제
-- 정치·종교·예민한 사회 이슈 완전 배제
+- 정치·종교·예민한 사회 이슈 배제
 - 뻔하거나 이미 유명한 주제(탕수육 부먹·찍먹 등) 배제
 - 한국어로만 작성
 - 이미 사용된 주제는 제외: {', '.join(used) if used else '없음'}
 
 [출력 형식]
 주제: (주제 키워드)
-질문: (양자택일 질문 한 문장)
+질문: (상황을 담은 3문장 이상의 질문. 줄바꿈 없이 이어서 작성)
 A: (선택지 A)
 B: (선택지 B)"""
 
-    content = call_claude(prompt, max_tokens=600)
+    content = call_claude(prompt, max_tokens=900)
     save_daily("debate", refresh_date, content)
     return content
 
