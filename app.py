@@ -240,7 +240,7 @@ def _parse_kw(text):
         return []
 
 with st.container(key="news_section"):
-    st.header("인기 뉴스")
+    st.header("슬쩍 인기뉴스")
 
     # ── 오늘의 인기토픽 ───────────────────────────────
     cached_kw = load_daily("news_classified", refresh_date)
@@ -314,7 +314,7 @@ def generate_literary(refresh_date):
     return content
 
 with st.container(key="quote_section"):
-    st.header("글읽기")
+    st.header("슬쩍 읽어보기")
 
     try:
         literary = generate_literary(refresh_date)
@@ -362,7 +362,7 @@ def generate_tmi(refresh_date):
     return content
 
 with st.container(key="tmi_section"):
-    st.header("TMI")
+    st.header("슬쩍 TMI")
 
     try:
         tmi = generate_tmi(refresh_date)
@@ -412,7 +412,7 @@ B: (선택지 B)"""
     return content
 
 with st.container(key="debate_section"):
-    st.header("토론")
+    st.header("슬쩍 토론")
 
     try:
         debate = generate_debate(refresh_date)
