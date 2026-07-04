@@ -5,6 +5,7 @@ import re
 import html as _html
 import time
 import os
+import random
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
@@ -290,18 +291,28 @@ st.divider()
 # ══════════════════════════════════════════════════
 # 문학·철학 글귀
 # ══════════════════════════════════════════════════
+LITERARY_TYPE_GUIDE = {
+    "책 발췌": "책 발췌: 유명 소설·자기개발서·시집·과학도서의 인상적인 문단 → 책 제목, 저자 포함",
+    "인물 기록": "인물 기록: 유명인의 연설·인터뷰·사고방식 → 인물 소개 포함",
+    "사자성어": "사자성어: 반드시 4글자 한자어로 된 사자성어만 선택. 한자 원문, 뜻풀이, 유래 고사 순으로",
+}
+
+def _pick_literary_type():
+    last_type = (load_content_history("literary_type") or [None])[-1]
+    candidates = [t for t in LITERARY_TYPE_GUIDE if t != last_type]
+    return random.choice(candidates)
+
 def generate_literary(refresh_date):
     cached = load_daily("literary", refresh_date)
     if cached:
         return cached
 
     used = load_content_history("literary")
+    literary_type = _pick_literary_type()
     prompt = f"""아래 조건에 맞게 한국어 글을 작성해주세요.
 
-[유형 - 셋 중 하나 선택]
-• 책 발췌: 유명 소설·자기개발서·시집·과학도서의 인상적인 문단 → 책 제목, 저자 포함
-• 인물 기록: 유명인의 연설·인터뷰·사고방식 → 인물 소개 포함
-• 사자성어: 반드시 4글자 한자어로 된 사자성어만 선택. 한자 원문, 뜻풀이, 유래 고사 순으로
+[유형]
+{LITERARY_TYPE_GUIDE[literary_type]}
 
 [필수 조건]
 - 한국어로만 작성
@@ -311,6 +322,7 @@ def generate_literary(refresh_date):
 
     content = call_claude(prompt)
     save_daily("literary", refresh_date, content)
+    save_content_history("literary_type", literary_type)
     return content
 
 with st.container(key="quote_section"):
