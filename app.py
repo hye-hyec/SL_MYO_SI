@@ -324,6 +324,8 @@ def generate_literary(refresh_date):
     content = call_claude(prompt)
     save_daily("literary", refresh_date, content)
     save_content_history("literary_type", literary_type)
+    topic = content.strip().split("\n", 1)[0].replace("주제:", "").strip()
+    save_content_history("literary", topic)
     return content
 
 with st.container(key="quote_section"):
@@ -337,10 +339,6 @@ with st.container(key="quote_section"):
 
         st.caption(f"오늘의 주제: {topic}")
         st.markdown(body)
-
-        if "literary_saved" not in st.session_state:
-            save_content_history("literary", topic)
-            st.session_state.literary_saved = True
 
     except Exception as e:
         st.error(f"글귀 생성 오류: {e}")
@@ -372,6 +370,8 @@ def generate_tmi(refresh_date):
 
     content = call_claude(prompt, max_tokens=800)
     save_daily("tmi", refresh_date, content)
+    topic = content.strip().split("\n", 1)[0].replace("주제:", "").strip()
+    save_content_history("tmi", topic)
     return content
 
 with st.container(key="tmi_section"):
@@ -385,10 +385,6 @@ with st.container(key="tmi_section"):
 
         st.caption(f"오늘의 주제: {topic}")
         st.markdown(body)
-
-        if "tmi_saved" not in st.session_state:
-            save_content_history("tmi", topic)
-            st.session_state.tmi_saved = True
 
     except Exception as e:
         st.error(f"TMI 생성 오류: {e}")
@@ -423,6 +419,10 @@ B: (선택지 B)"""
 
     content = call_claude(prompt, max_tokens=900)
     save_daily("debate", refresh_date, content)
+    for line in content.strip().splitlines():
+        if line.startswith("주제:"):
+            save_content_history("debate", line[len("주제:"):].strip())
+            break
     return content
 
 with st.container(key="debate_section"):
@@ -444,10 +444,6 @@ with st.container(key="debate_section"):
             st.markdown(f"**A.** {parsed['A']}")
         if "B" in parsed:
             st.markdown(f"**B.** {parsed['B']}")
-
-        if "debate_saved" not in st.session_state:
-            save_content_history("debate", parsed.get("주제", ""))
-            st.session_state.debate_saved = True
 
     except Exception as e:
         st.error(f"논쟁 생성 오류: {e}")
