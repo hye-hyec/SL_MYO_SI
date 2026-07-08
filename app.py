@@ -295,7 +295,6 @@ st.divider()
 LITERARY_TYPE_GUIDE = {
     "책 발췌": "책 발췌: 유명 소설·자기개발서·시집·과학도서의 인상적인 문단 → 책 제목, 저자 포함",
     "인물 기록": "인물 기록: 유명인의 연설·인터뷰·사고방식 → 인물 소개 포함",
-    "사자성어": "사자성어: 반드시 4글자 한자어로 된 사자성어만 선택. 한자 원문, 뜻풀이, 유래 고사 순으로",
 }
 
 def _pick_literary_type():
@@ -318,7 +317,7 @@ def generate_literary(refresh_date):
 [필수 조건]
 - 한국어로만 작성
 - 500자 이상
-- 첫 줄에 반드시 "주제: (책 제목 또는 인물 이름 또는 사자성어)" 형식으로 시작
+- 첫 줄에 반드시 "주제: (책 제목 또는 인물 이름)" 형식으로 시작
 - 이미 사용된 주제는 반드시 제외: {', '.join(used) if used else '없음'}"""
 
     content = call_claude(prompt)
@@ -342,108 +341,3 @@ with st.container(key="quote_section"):
 
     except Exception as e:
         st.error(f"글귀 생성 오류: {e}")
-
-st.divider()
-
-# ══════════════════════════════════════════════════
-# 오늘의 TMI
-# ══════════════════════════════════════════════════
-def generate_tmi(refresh_date):
-    cached = load_daily("tmi", refresh_date)
-    if cached:
-        return cached
-
-    used = load_content_history("tmi")
-    prompt = f"""흥미롭고 잘 알려지지 않은 사실을 한국어로 작성해주세요.
-
-[구성 — 3줄 이상]
-1. 핵심 사실: 놀랍거나 신기한 팩트 한 문장
-2. 배경 설명: 왜 그런지, 어떻게 그렇게 되는지
-3. 연결 정보: 이 사실과 연결된 흥미로운 추가 정보
-
-[조건]
-- 한국어로만 작성
-- 실제 사실에 근거할 것
-- 가볍게 읽히면서 대화 소재가 될 수 있는 주제
-- 이미 사용된 주제는 제외: {', '.join(used) if used else '없음'}
-- 첫 줄에 "주제: (주제 키워드)" 형식으로 시작"""
-
-    content = call_claude(prompt, max_tokens=800)
-    save_daily("tmi", refresh_date, content)
-    topic = content.strip().split("\n", 1)[0].replace("주제:", "").strip()
-    save_content_history("tmi", topic)
-    return content
-
-with st.container(key="tmi_section"):
-    st.header("슬쩍 TMI")
-
-    try:
-        tmi = generate_tmi(refresh_date)
-        lines = tmi.strip().split("\n", 1)
-        topic = lines[0].replace("주제:", "").strip()
-        body = lines[1].strip() if len(lines) > 1 else tmi
-
-        st.caption(f"오늘의 주제: {topic}")
-        st.markdown(body)
-
-    except Exception as e:
-        st.error(f"TMI 생성 오류: {e}")
-
-st.divider()
-
-# ══════════════════════════════════════════════════
-# 오늘의 논쟁
-# ══════════════════════════════════════════════════
-def generate_debate(refresh_date):
-    cached = load_daily("debate", refresh_date)
-    if cached:
-        return cached
-
-    used = load_content_history("debate")
-    prompt = f"""오늘의 가벼운 논쟁 주제를 한국어로 만들어주세요.
-
-[조건]
-- 양자택일 형식 (A vs B)
-- 질문은 구체적인 상황을 3문장 이상으로 묘사해서, 답변자가 그 상황에 이입해 진지하게 고민하게 만들 것 (단순 취향 질문 금지)
-- 답변에서 그 사람의 성격·기호·성향이 자연스럽게 드러나는 주제
-- 정치·종교·예민한 사회 이슈 배제
-- 뻔하거나 이미 유명한 주제(탕수육 부먹·찍먹 등) 배제
-- 한국어로만 작성
-- 이미 사용된 주제는 제외: {', '.join(used) if used else '없음'}
-
-[출력 형식]
-주제: (주제 키워드)
-질문: (상황을 담은 3문장 이상의 질문. 줄바꿈 없이 이어서 작성)
-A: (선택지 A)
-B: (선택지 B)"""
-
-    content = call_claude(prompt, max_tokens=900)
-    save_daily("debate", refresh_date, content)
-    for line in content.strip().splitlines():
-        if line.startswith("주제:"):
-            save_content_history("debate", line[len("주제:"):].strip())
-            break
-    return content
-
-with st.container(key="debate_section"):
-    st.header("슬쩍 토론")
-
-    try:
-        debate = generate_debate(refresh_date)
-        parsed = {}
-        for line in debate.strip().splitlines():
-            for key in ("주제", "질문", "A", "B"):
-                if line.startswith(f"{key}:"):
-                    parsed[key] = line[len(key)+1:].strip()
-                    break
-
-        st.caption(f"오늘의 주제: {parsed.get('주제', '')}")
-        if "질문" in parsed:
-            st.markdown(f"**{parsed['질문']}**")
-        if "A" in parsed:
-            st.markdown(f"**A.** {parsed['A']}")
-        if "B" in parsed:
-            st.markdown(f"**B.** {parsed['B']}")
-
-    except Exception as e:
-        st.error(f"논쟁 생성 오류: {e}")
