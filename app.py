@@ -302,12 +302,38 @@ def _pick_literary_type():
     candidates = [t for t in LITERARY_TYPE_GUIDE if t != last_type]
     return random.choice(candidates)
 
+LITERARY_TOPIC_WINDOW_DAYS = 30
+
+def _recent_literary_topics(refresh_date, days=LITERARY_TOPIC_WINDOW_DAYS):
+    if not os.path.exists(CONTENT_HISTORY_FILE):
+        return []
+    with open(CONTENT_HISTORY_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    entries = data.get("literary", [])
+    cutoff = (datetime.strptime(refresh_date, "%Y-%m-%d") - timedelta(days=days)).strftime("%Y-%m-%d")
+    return [e["topic"] for e in entries if isinstance(e, dict) and e.get("date", "") >= cutoff]
+
+def _save_literary_topic(topic, refresh_date):
+    data = {}
+    if os.path.exists(CONTENT_HISTORY_FILE):
+        with open(CONTENT_HISTORY_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    entries = [e for e in data.get("literary", []) if isinstance(e, dict)]
+    entries.append({"topic": topic, "date": refresh_date})
+    data["literary"] = entries[-(LITERARY_TOPIC_WINDOW_DAYS * 2):]
+    with open(CONTENT_HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+def _topic_is_repeat(topic, used):
+    t = topic.lower()
+    return any(t in u.lower() or u.lower() in t for u in used if u)
+
 def generate_literary(refresh_date):
     cached = load_daily("literary", refresh_date)
     if cached:
         return cached
 
-    used = load_content_history("literary")
+    used = _recent_literary_topics(refresh_date)
     literary_type = _pick_literary_type()
     prompt = f"""아래 조건에 맞게 한국어 글을 작성해주세요.
 
@@ -318,13 +344,19 @@ def generate_literary(refresh_date):
 - 한국어로만 작성
 - 500자 이상
 - 첫 줄에 반드시 "주제: (책 제목 또는 인물 이름)" 형식으로 시작
-- 이미 사용된 주제는 반드시 제외: {', '.join(used) if used else '없음'}"""
+- 최근 {LITERARY_TOPIC_WINDOW_DAYS}일간 이미 사용된 주제는 반드시 제외: {', '.join(used) if used else '없음'}"""
 
     content = call_claude(prompt)
+    topic = content.strip().split("\n", 1)[0].replace("주제:", "").strip()
+    for _ in range(2):
+        if not _topic_is_repeat(topic, used):
+            break
+        content = call_claude(prompt)
+        topic = content.strip().split("\n", 1)[0].replace("주제:", "").strip()
+
     save_daily("literary", refresh_date, content)
     save_content_history("literary_type", literary_type)
-    topic = content.strip().split("\n", 1)[0].replace("주제:", "").strip()
-    save_content_history("literary", topic)
+    _save_literary_topic(topic, refresh_date)
     return content
 
 with st.container(key="quote_section"):
